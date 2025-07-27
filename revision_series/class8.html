@@ -77,6 +77,8 @@
         <h2>CLASS NO: 08</h2>
         <h3>বিগত বছরের পরীক্ষার প্রশ্নাবলী ও বিশ্লেষণ</h3>
 
+        <!-- All 47 Questions Start Here -->
+
         <div class="mcq-item">
             <h4>1. এস আই পদ্ধতিতে তাপের একক কী?</h4>
             <p><em>(SSC NTPC পরীক্ষা)</em></p>
@@ -100,7 +102,7 @@
             </ul>
             <blockquote><strong>উত্তর: (B) 0.24 ক্যালোরি</strong><br><strong>ব্যাখ্যা:</strong> আমরা জানি, 1 ক্যালোরি ≈ 4.2 জুল। সুতরাং, 1 জুল = 1 / 4.2 ক্যালোরি ≈ 0.24 ক্যালোরি।</blockquote>
         </div>
-
+        
         <div class="mcq-item">
             <h4>3. ফারেনহাইট স্কেলে জলের হিমাঙ্ক কত?</h4>
             <p><em>(SSC MTS & CGSL পরীক্ষা)</em></p>
@@ -679,11 +681,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Theme and Dark Mode functionality
             const themeButtons = document.querySelectorAll('.theme-buttons button');
             const darkModeToggle = document.getElementById('darkModeToggle');
             const body = document.body;
-            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
             function applyTheme(theme) { body.dataset.theme = theme; localStorage.setItem('selected_theme', theme); }
             function applyMode(mode) { if (mode === 'dark') { body.classList.add('dark-mode'); darkModeToggle.checked = true; } else { body.classList.remove('dark-mode'); darkModeToggle.checked = false; } localStorage.setItem('selected_mode', mode); }
             const savedTheme = localStorage.getItem('selected_theme');
@@ -692,6 +693,10 @@
             if (savedMode) applyMode(savedMode);
             themeButtons.forEach(button => { button.addEventListener('click', () => { applyTheme(button.dataset.themeName); }); });
             darkModeToggle.addEventListener('change', () => { applyMode(darkModeToggle.checked ? 'dark' : 'light'); });
+
+            // Scroll buttons functionality
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
             window.addEventListener('scroll', () => {
                 const scrollPosition = window.scrollY;
                 const windowHeight = window.innerHeight;
@@ -701,6 +706,37 @@
             });
             scrollToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
             scrollToBottomBtn.addEventListener('click', () => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); });
+            
+            // --- নতুন কোড: কি-বোর্ড দিয়ে অটো-স্ক্রল ---
+            let isAutoScrolling = false;
+            let scrollInterval;
+            const scrollSpeed = 1; // প্রতি ধাপে 1 পিক্সেল স্ক্রল হবে
+            const scrollDelay = 15; // 15 মিলিসেকেন্ড পর পর
+
+            window.addEventListener('keydown', (event) => {
+                // শুধুমাত্র Spacebar চাপলে কাজ করবে
+                if (event.key === ' ') {
+                    event.preventDefault(); // Spacebar-এর ডিফল্ট কাজ (পেজ জাম্প) বন্ধ করা হলো
+
+                    if (isAutoScrolling) {
+                        // যদি স্ক্রলিং চালু থাকে, তবে বন্ধ করো
+                        clearInterval(scrollInterval);
+                        isAutoScrolling = false;
+                    } else {
+                        // যদি স্ক্রলিং বন্ধ থাকে, তবে চালু করো
+                        isAutoScrolling = true;
+                        scrollInterval = setInterval(() => {
+                            // যদি পেজের শেষে পৌঁছে যায়, তাহলে স্ক্রলিং বন্ধ করো
+                            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                                clearInterval(scrollInterval);
+                                isAutoScrolling = false;
+                            } else {
+                                window.scrollBy(0, scrollSpeed);
+                            }
+                        }, scrollDelay);
+                    }
+                }
+            });
         });
     </script>
 </body>
